@@ -1,0 +1,86 @@
+export const FEATURES = [
+  {
+    path: '/mood',
+    icon: 'sparkles',
+    title: 'Mood to Scene',
+    nav: 'Mood to Scene',
+    blurb: 'Describe a feeling in plain words and find films that feel exactly like it.',
+    bullets: [
+      'Type any mood, scene, or reference',
+      'Semantic search across 25,706 plot summaries',
+      'A match score for every result',
+    ],
+  },
+  {
+    path: '/watch-party',
+    icon: 'users',
+    title: 'Watch Party',
+    nav: 'Watch Party',
+    blurb: 'Pick up to five favorites. Get one film the whole group can agree on.',
+    bullets: [
+      'Combine 1-5 people\u2019s picks into one taste profile',
+      'Optional runtime and genre filters',
+      'Honest compromise scores for every result',
+    ],
+  },
+  {
+    path: '/time-budget',
+    icon: 'clock',
+    title: 'Time-Budget & Bedtime',
+    nav: 'Time & Bedtime',
+    blurb: 'Tell us how long you have and when you start. We fit the film to your night.',
+    bullets: [
+      'Enter minutes available and a start time',
+      'See exactly when the film ends',
+      'Calm mode for late-night viewing',
+    ],
+  },
+  {
+    path: '/double-feature',
+    icon: 'layers',
+    title: 'Double Feature',
+    nav: 'Double Feature',
+    blurb: 'A perfect companion piece: mirror the vibe or flip it with contrast.',
+    bullets: [
+      'Mirror mode: same energy, different decade',
+      'Contrast mode: shared genre, opposite intensity',
+      'Instant two-film playlists',
+    ],
+  },
+  {
+    path: '/cultural-bridge',
+    icon: 'globe',
+    title: 'Cultural Bridge',
+    nav: 'Cultural Bridge',
+    blurb: 'Love a Hollywood film? Meet its closest international soulmate.',
+    bullets: [
+      'Start from any favorite film',
+      'Get the nearest non-English matches',
+      'Language and country on every pick',
+    ],
+  },
+  {
+    path: '/era-machine',
+    icon: 'hourglass',
+    title: 'Era Time Machine',
+    nav: 'Era Time Machine',
+    blurb: 'Jump to any decade and find its closest match to the film you love.',
+    bullets: [
+      'Choose any decade from the 1920s to the 2020s',
+      'Closest era match for your favorite film',
+      'See how genres evolved over time',
+    ],
+  },
+  {
+    path: '/hidden-gems',
+    icon: 'gem',
+    title: 'Hidden Gems',
+    nav: 'Hidden Gems',
+    blurb: 'High ratings, low fame: the films that deserve far more eyes than they got.',
+    bullets: [
+      'High rating, low vote count',
+      'Filter by genre and year range',
+      'Ranked by our gem score',
+    ],
+  },
+]
