@@ -5,8 +5,7 @@ semantic embeddings. Instead of scrolling through genres, you describe the
 feeling, the time you have, the group you are watching with, or the film you
 already love — and the engine finds what fits.
 
-The project ships with a **Streamlit app** and an optional **React client
-backed by FastAPI**. Both expose the same seven recommendation tools.
+The project is a **Streamlit app** that exposes all seven recommendation tools.
 
 ## Table of Contents
 
@@ -71,18 +70,16 @@ and ranking logic all live in this repository.
 
 - **Recommendation engine:** Python, pandas, NumPy, and
   `sentence-transformers/all-MiniLM-L6-v2`
-- **Streamlit app:** Streamlit with a custom black-and-white theme
-- **Optional web client:** FastAPI, Uvicorn, React 19, and Vite
+- **Interface:** Streamlit with a custom black-and-white theme
 
 ## Project Structure
 
 ```text
 .
 ├── app.py                      # Streamlit application
-├── backend/                    # FastAPI routes and schemas
 ├── src/recommender.py          # Recommendation engine (all seven tools)
 ├── data/processed/             # Dataset, embeddings, and embedding ids
-├── frontend/                   # React client
+├── tests/                      # Engine, edge-case, and Streamlit tests
 ├── docs/screenshots/           # README screenshots
 ├── .streamlit/config.toml      # Streamlit theme
 └── requirements.txt
@@ -90,8 +87,7 @@ and ranking logic all live in this repository.
 
 ## Installation
 
-You need **Python 3.10 or newer**. Node.js 18+ is only needed if you want to run
-the optional React client.
+You need **Python 3.10 or newer**.
 
 1. **Clone the repository**
 
@@ -130,28 +126,6 @@ Open [http://localhost:8501](http://localhost:8501). The sidebar lists the seven
 tools; the landing page shows an overview and live hidden gems. An internet
 connection is needed only on the first mood search, when the MiniLM model is
 downloaded once and cached.
-
-### Optional: FastAPI + React client
-
-Terminal 1 — start the API:
-
-```bash
-uvicorn backend.main:app --reload --port 8000
-```
-
-Interactive API documentation is available at
-[http://localhost:8000/docs](http://localhost:8000/docs).
-
-Terminal 2 — install and start the React client:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173). The client calls
-`http://127.0.0.1:8000` by default; set `VITE_API_URL` to override it.
 
 ## Usage Guide
 
@@ -192,5 +166,3 @@ Open [http://localhost:5173](http://localhost:5173). The client calls
 
 - Open an issue for bugs, ideas, or questions:
   [GitHub Issues](https://github.com/MoazzamFarooqui/A-Feeling-Called-Cinema/issues)
-- While the backend is running, use the generated API documentation:
-  [http://localhost:8000/docs](http://localhost:8000/docs)
