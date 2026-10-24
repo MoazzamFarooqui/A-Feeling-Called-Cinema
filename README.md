@@ -147,13 +147,57 @@ downloaded once and cached.
 
 ## Screenshots
 
-**Home — seven ways in**
+### Home
 
-![Streamlit home screen with seven recommendation tools](docs/screenshots/streamlit-home.png)
+<img width="1677" height="707" alt="image" src="https://github.com/user-attachments/assets/3e20b11c-d420-4622-9e5b-64b85cb1c584" />
 
-**Hidden Gems — filtered and ranked by gem score**
+<img width="1042" height="372" alt="image" src="https://github.com/user-attachments/assets/8a82eb07-c363-4cfe-91bb-9587ae87b4f9" />
 
-![Hidden Gems results grid](docs/screenshots/streamlit-hidden-gems.png)
+---
+
+### Mood to Scene
+
+<img width="1662" height="802" alt="image" src="https://github.com/user-attachments/assets/6a49507e-dfbb-485f-88b9-8d451ac494c6" />
+
+---
+
+### Watch Party
+
+<img width="1692" height="687" alt="image" src="https://github.com/user-attachments/assets/c5f4a3d5-9b09-4cda-9e90-e8d382e7480d" />
+
+<img width="1010" height="352" alt="image" src="https://github.com/user-attachments/assets/0c2cc487-1f2d-422d-b3b4-422f74fe4082" />
+
+---
+
+### Time Budget
+
+<img width="1617" height="842" alt="image" src="https://github.com/user-attachments/assets/0fc9a33d-1c23-48aa-be74-40cf861e03a8" />
+
+---
+
+### Double Feature
+
+<img width="1788" height="837" alt="image" src="https://github.com/user-attachments/assets/bcd0ec4e-2a1b-4f6b-a8e9-e8b95b3b729e" />
+
+---
+
+### Cultural Bridge
+
+<img width="1721" height="743" alt="image" src="https://github.com/user-attachments/assets/e6fcaf38-7057-4779-9ea8-a7124d360cbb" />
+
+---
+
+### Era Machine
+
+<img width="1673" height="805" alt="image" src="https://github.com/user-attachments/assets/11176e00-01d2-4dea-b078-ee88789a299a" />
+
+---
+
+### Hidden Gems
+
+<img width="1715" height="835" alt="image" src="https://github.com/user-attachments/assets/ec7d573a-458a-4b34-b6c9-9d93770b93ae" />
+
+---
 
 ## Contributing
 
