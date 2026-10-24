@@ -68,7 +68,17 @@ def test_watch_party_single_person_journey(at):
     at.text_input[0].set_value('Inception').run()
     at.selectbox[0].set_value(at.selectbox[0].options[0]).run()
     click(at, 'Find common ground')
-    assert any('whole group' in text for text in captions(at))
+    assert any('best group picks' in text for text in captions(at))
+
+
+def test_watch_party_result_count_is_configurable(at):
+    goto(at, 'Watch Party')
+    at.number_input[0].set_value(1).run()
+    at.text_input[0].set_value('Inception').run()
+    at.selectbox[0].set_value(at.selectbox[0].options[0]).run()
+    at.number_input[1].set_value(20).run()
+    click(at, 'Find common ground')
+    assert any('20 best group picks' in text for text in captions(at))
 
 
 def test_time_budget_thirty_minutes_shows_friendly_empty_state(at):
@@ -78,12 +88,29 @@ def test_time_budget_thirty_minutes_shows_friendly_empty_state(at):
     assert any('shortest is 40 minutes' in text for text in infos(at))
 
 
+def test_time_budget_result_count_is_configurable(at):
+    goto(at, 'Time Budget')
+    at.number_input[0].set_value(120).run()
+    at.number_input[1].set_value(20).run()
+    click(at, 'Show me what fits')
+    assert any('20 best fits inside 120 minutes' in text for text in captions(at))
+
+
 def test_double_feature_journey(at):
     goto(at, 'Double Feature')
     at.text_input[0].set_value('Spirited Away').run()
     at.selectbox[0].set_value(at.selectbox[0].options[0]).run()
     click(at, 'Build the double feature')
-    assert any('pairing' in text for text in captions(at))
+    assert any('2 best mirror companions' in text for text in captions(at))
+
+
+def test_double_feature_result_count_is_configurable(at):
+    goto(at, 'Double Feature')
+    at.text_input[0].set_value('Spirited Away').run()
+    at.selectbox[0].set_value(at.selectbox[0].options[0]).run()
+    at.number_input[0].set_value(20).run()
+    click(at, 'Build the double feature')
+    assert any('20 best mirror companions' in text for text in captions(at))
 
 
 def test_cultural_bridge_journey(at):
@@ -126,7 +153,7 @@ def test_error_state_offers_working_retry_button(at, monkeypatch):
     at.text_input[0].set_value('The Godfather').run()
     at.selectbox[0].set_value(at.selectbox[0].options[0]).run()
 
-    def explode(self, movie_id, mode='mirror'):
+    def explode(self, movie_id, mode='mirror', top_k=2):
         raise ValueError('engine exploded')
 
     monkeypatch.setattr(recommender_module.MovieRecommender, 'double_feature', explode)
@@ -137,4 +164,4 @@ def test_error_state_offers_working_retry_button(at, monkeypatch):
     monkeypatch.undo()
     click(at, 'Try again')
     assert not at.error
-    assert any('pairing' in text for text in captions(at))
+    assert any('companions' in text for text in captions(at))

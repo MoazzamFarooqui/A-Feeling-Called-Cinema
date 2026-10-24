@@ -241,8 +241,8 @@ def cached_time_budget(minutes, start_clock, calm_only, top_k):
 
 
 @st.cache_data(show_spinner=False)
-def cached_double_feature(movie_id, mode):
-    return load_recommender().double_feature(movie_id, mode=mode)
+def cached_double_feature(movie_id, mode, top_k):
+    return load_recommender().double_feature(movie_id, mode=mode, top_k=top_k)
 
 
 @st.cache_data(show_spinner=False)
@@ -456,7 +456,7 @@ def page_mood():
         height=100,
         key="mood_query",
     )
-    top_k = st.number_input("How many films?", min_value=1, max_value=50, value=12)
+    top_k = st.number_input("How many films to show?", min_value=1, max_value=50, value=12)
 
     if action_clicked("Find my scene", "mood"):
         if len(query.strip()) < 3:
@@ -501,6 +501,8 @@ def page_watch_party():
             "Maximum runtime (minutes)", min_value=60, max_value=240, value=180, step=10
         )
 
+    top_k = st.number_input("How many films to show?", min_value=1, max_value=50, value=12)
+
     if action_clicked("Find common ground", "watch_party"):
         movie_ids = tuple(pick["id"] for pick in picks if pick)
         if not movie_ids:
@@ -509,7 +511,7 @@ def page_watch_party():
             try:
                 with st.spinner("Resolving everyone’s taste…"):
                     st.session_state.watch_party_results = cached_watch_party(
-                        movie_ids, 12, max_runtime
+                        movie_ids, top_k, max_runtime
                     )
                     st.session_state.watch_party_error = ""
             except Exception as exc:
@@ -522,7 +524,7 @@ def page_watch_party():
         if results and any(movie.get("note") for movie in results):
             st.caption("Filters were relaxed slightly so the group still had common ground.")
         if results:
-            st.caption(f"{len(results)} films the whole group can agree on.")
+            st.caption(f"Showing the {len(results)} best group picks.")
         render_grid(results, empty_message="No shared film found. Try fewer or broader picks.")
 
 
@@ -533,6 +535,7 @@ def page_time_budget():
     )
 
     minutes = st.number_input("Minutes available tonight", min_value=30, max_value=240, value=120, step=15)
+    top_k = st.number_input("How many films to show?", min_value=1, max_value=50, value=12)
     plan_clock = st.checkbox("Plan the evening clock", value=False)
     start_time = None
     if plan_clock:
@@ -544,7 +547,7 @@ def page_time_budget():
         try:
             with st.spinner("Checking the clock…"):
                 st.session_state.time_budget_results = cached_time_budget(
-                    minutes, start_clock, calm_only, 12
+                    minutes, start_clock, calm_only, top_k
                 )
                 st.session_state.time_budget_error = ""
         except Exception as exc:
@@ -555,7 +558,7 @@ def page_time_budget():
     results = st.session_state.get("time_budget_results")
     if results is not None:
         if results:
-            st.caption(f"{len(results)} films fit inside {minutes} minutes.")
+            st.caption(f"Showing the {len(results)} best fits inside {minutes} minutes.")
         shortest = int(load_recommender().df["runtime"].min())
         render_grid(
             results,
@@ -581,14 +584,16 @@ def page_double_feature():
     else:
         st.caption("Contrast: same genre, opposite energy.")
 
+    top_k = st.number_input("How many films to show?", min_value=1, max_value=50, value=2)
+
     if action_clicked("Build the double feature", "double_feature"):
         if not movie:
             st.warning("Choose an anchor film first.")
         else:
             try:
-                with st.spinner("Finding the other half…"):
+                with st.spinner("Finding the companions…"):
                     st.session_state.double_feature_results = cached_double_feature(
-                        movie["id"], mode
+                        movie["id"], mode, top_k
                     )
                     st.session_state.double_feature_error = ""
             except Exception as exc:
@@ -598,7 +603,7 @@ def page_double_feature():
     show_action_error("Could not build that pairing.", "double_feature")
     results = st.session_state.get("double_feature_results")
     if results:
-        st.caption(f"A {results['mode']} pairing, in viewing order.")
+        st.caption(f"Showing the {len(results['playlist'])} best {results['mode']} companions.")
         render_grid(results["playlist"], columns=2)
 
 
@@ -646,7 +651,7 @@ def page_era_machine():
         index=len(VALID_DECADES) - 2,
         format_func=lambda value: f"{value}s",
     )
-    top_k = st.number_input("How many contemporaries?", min_value=1, max_value=50, value=12)
+    top_k = st.number_input("How many films to show?", min_value=1, max_value=50, value=12)
 
     if action_clicked("Fire up the machine", "era_machine"):
         if not movie:
