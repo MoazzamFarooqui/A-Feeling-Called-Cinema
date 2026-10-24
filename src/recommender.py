@@ -235,37 +235,43 @@ class MovieRecommender:
     # ------------------------------------------------------------------
     # Feature 4 — Cinematic Companion Double Feature Pairing
     # ------------------------------------------------------------------
-    def double_feature(self, movie_id, mode='mirror'):
+    def double_feature(self, movie_id, mode='mirror', top_k=2):
         if mode not in ('mirror', 'contrast'):
             raise ValueError("mode must be 'mirror' or 'contrast'")
+        top_k = int(top_k)
+        if top_k < 1:
+            raise ValueError('top_k must be at least 1')
         idx = self._movie_idx(movie_id)
-        base = self._format(idx)
+        anchor_title = str(self.df.iloc[idx]['title']).strip().casefold()
         scores = self.embeddings @ self.embeddings[idx]
         scores[idx] = -1
 
+        def is_anchor(i):
+            return i == idx or str(self.df.iloc[i]['title']).strip().casefold() == anchor_title
+
         if mode == 'mirror':
-            base_decade = self.df.iloc[idx]['decade']
-            partner = None
-            for threshold in (0.6, 0.5, 0.45, 0.4, 0.0):
-                candidates = [
-                    int(i) for i in np.argsort(-scores)
-                    if int(i) != idx
-                    and float(scores[i]) >= threshold
-                    and self.df.iloc[int(i)]['decade'] != base_decade
-                ]
-                if candidates:
-                    partner = candidates[0]
+            base_decade = int(self.df.iloc[idx]['decade'])
+            partners = []
+            for i in np.argsort(-scores):
+                i = int(i)
+                if is_anchor(i) or int(self.df.iloc[i]['decade']) == base_decade:
+                    continue
+                partners.append(i)
+                if len(partners) >= top_k:
                     break
-            if partner is None:
+            if not partners:
                 raise ValueError('No suitable mirror partner found')
-            partner_result = self._format(partner, similarity=float(scores[partner]))
+            partner_results = [
+                self._format(partner, similarity=float(scores[partner]))
+                for partner in partners
+            ]
         else:
             base_genres = {g.lower() for g in self.genres[idx]}
             base_intensity = float(self.df.iloc[idx]['intensity_score'])
             candidates = []
             for i in np.argsort(-scores):
                 i = int(i)
-                if i == idx:
+                if is_anchor(i):
                     continue
                 overlap = base_genres.intersection({g.lower() for g in self.genres[i]})
                 if not overlap:
@@ -275,18 +281,21 @@ class MovieRecommender:
 
             candidates.sort(key=lambda c: (-c[0], -c[1], -c[2]))
             strong = [c for c in candidates if c[1] >= 0.3]
-            chosen = strong[0] if strong else (candidates[0] if candidates else None)
-            if chosen is None:
+            rest = [c for c in candidates if c[1] < 0.3]
+            partners = [c[3] for c in (strong + rest)[:top_k]]
+            if not partners:
                 raise ValueError('No suitable contrast partner found')
-            partner = chosen[3]
-            partner_result = self._format(
-                partner,
-                intensity_shift=round(float(self.df.iloc[partner]['intensity_score']) - base_intensity, 3),
-            )
+            partner_results = [
+                self._format(
+                    partner,
+                    intensity_shift=round(float(self.df.iloc[partner]['intensity_score']) - base_intensity, 3),
+                )
+                for partner in partners
+            ]
 
         return {
             'mode': mode,
-            'playlist': [base, partner_result],
+            'playlist': partner_results,
         }
 
     # ------------------------------------------------------------------

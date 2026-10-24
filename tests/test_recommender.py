@@ -102,19 +102,31 @@ def test_double_feature_mirror(rec):
     pair = rec.double_feature(base_id, mode='mirror')
     assert pair['mode'] == 'mirror'
     assert len(pair['playlist']) == 2
-    base, partner = pair['playlist']
-    assert base['id'] == base_id
-    assert partner['id'] != base_id
-    assert partner['decade_label'] != base['decade_label']
-    assert partner['similarity'] > 0
+    anchor_decade = rec.df.iloc[rec.id_to_idx[base_id]]['decade_label']
+    assert all(film['id'] != base_id for film in pair['playlist'])
+    assert all(film['title'].strip().casefold() != 'inception' for film in pair['playlist'])
+    assert all(film['decade_label'] != anchor_decade for film in pair['playlist'])
+    assert all(film['similarity'] > 0 for film in pair['playlist'])
 
 
 def test_double_feature_contrast(rec):
     base_id = movie_id(rec, GODFATHER)
     pair = rec.double_feature(base_id, mode='contrast')
-    base, partner = pair['playlist']
-    assert set(base['genres']).intersection(partner['genres'])
-    assert abs(partner['intensity_shift']) >= 0.3
+    anchor_genres = set(rec.genres[rec.id_to_idx[base_id]])
+    assert len(pair['playlist']) == 2
+    for partner in pair['playlist']:
+        assert partner['id'] != base_id
+        assert set(partner['genres']).intersection(anchor_genres)
+        assert abs(partner['intensity_shift']) >= 0.3
+
+
+def test_double_feature_supports_multiple_companions(rec):
+    base_id = movie_id(rec, INCEPTION)
+    for mode in ('mirror', 'contrast'):
+        playlist = rec.double_feature(base_id, mode=mode, top_k=5)['playlist']
+        assert len(playlist) == 5
+        assert all(film['id'] != base_id for film in playlist)
+        assert len({film['id'] for film in playlist}) == 5
 
 
 def test_double_feature_invalid_mode_raises(rec):
