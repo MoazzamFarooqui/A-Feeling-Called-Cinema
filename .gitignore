@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+
+# Environment and secrets
+.env
+.env.*
+.streamlit/secrets.toml
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/dist/
+
+# Raw data, generated reports, and dataset-preparation artifacts
+/data/raw/
+/eda_output/
+/cleaning_report.txt
+/IMPLEMENTATION_PLAN.md
+/Steps to clean the dataset.docx
+/src/preprocess.py
+/src/eda.py
+/src/validate.py
+/src/generate_embeddings.py
