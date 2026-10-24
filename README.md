@@ -80,7 +80,6 @@ and ranking logic all live in this repository.
 ├── src/recommender.py          # Recommendation engine (all seven tools)
 ├── data/processed/             # Dataset, embeddings, and embedding ids
 ├── tests/                      # Engine, edge-case, and Streamlit tests
-├── docs/screenshots/           # README screenshots
 ├── .streamlit/config.toml      # Streamlit theme
 └── requirements.txt
 ```
